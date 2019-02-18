@@ -1,4 +1,6 @@
-﻿using Domain.Entities;
+﻿using System;
+using System.Collections.Generic;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace DataAccess
@@ -32,6 +34,31 @@ namespace DataAccess
             builder.Entity<ChatMember>()
                 .HasOne(m => m.Chat)
                 .WithMany(m => m.ChatMembers);
+
+            builder.Entity<Chat>().HasData(new Chat
+            {
+                Id = new Guid("97959327-435E-4762-8995-1367583222E6"),
+                Name = "SuperName",
+            });
+
+            builder.Entity<ChatMember>().HasData(new List<ChatMember>()
+            {
+                new ChatMember()
+                {
+                    ChatId = new Guid("97959327-435E-4762-8995-1367583222E6"),
+                    UserId = 1
+                },
+                new ChatMember()
+                {
+                    ChatId = new Guid("97959327-435E-4762-8995-1367583222E6"),
+                    UserId = 2
+                },
+                new ChatMember()
+                {
+                    ChatId = new Guid("97959327-435E-4762-8995-1367583222E6"),
+                    UserId = 3
+                }
+            });
 
         }
     }
