@@ -2,44 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using App.ChatDtos;
+using App.ChatServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace TestProjection.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ChatController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
-        {
-            return new string[] {"value1", "value2"};
-        }
+        private readonly ChatService _chatService;
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ChatController(ChatService chatService)
         {
-            return "value";
+            _chatService = chatService;
         }
+        
+        [HttpPost("Room")]
+        public async Task<List<ChatDto>> Room() => 
+            await _chatService.Rooms();
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        [HttpPost("Message")]
+        public async Task<List<MessageDto>> Message([FromBody]Guid chatId) =>
+            await _chatService.Messages(chatId);
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpPost("Create")]
+        public async Task<Guid> Create([FromBody] CreateChatDto payload) =>
+            await _chatService.CreateChat(payload);
     }
 }
